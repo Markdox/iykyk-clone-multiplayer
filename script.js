@@ -96,10 +96,10 @@ function joinRoom() {
     document.getElementById('setupScreen').style.display = 'none';
     document.getElementById('gameScreen').style.display = 'flex';
 
-    // Iniziamo ad ascoltare i cambiamenti in questa stanza su Firebase
+    // Riferimento alla stanza usando window.fb
     const roomRef = window.fb.dbRef(window.fb.db, 'rooms/' + currentRoom);
     
-    window.fb.onValue(roomRef, (snapshot) => {
+    window.fb.dbOnValue(roomRef, (snapshot) => {
         const data = snapshot.val();
         if (data) {
             displayQuestion(data.index);
@@ -110,10 +110,12 @@ function joinRoom() {
 // --- FUNZIONE MASTER: CAMBIA DOMANDA PER TUTTI ---
 function nextQuestion() {
     if (!currentRoom) return;
+    if (!window.fb) return alert("Errore: Firebase non è ancora pronto!"); // Controllo sicurezza
+
     const randomIdx = Math.floor(Math.random() * domandeQuiz.length);
     const roomRef = window.fb.dbRef(window.fb.db, 'rooms/' + currentRoom);
     
-    window.fb.set(roomRef, {
+    window.fb.dbSet(roomRef, {
         index: randomIdx,
         timestamp: Date.now()
     });
