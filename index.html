@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>IYKYK Live Multiplayer</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+      import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+      // --- SOSTITUISCI QUESTI DATI CON I TUOI ---
+      const firebaseConfig = {
+  apiKey: "AIzaSyDy4DGj_62KpcDCYOd-YgY8smFDsGysLic",
+  authDomain: "iykyk-multi.firebaseapp.com",
+  projectId: "iykyk-multi",
+  storageBucket: "iykyk-multi.firebasestorage.app",
+  messagingSenderId: "166511006601",
+  appId: "1:166511006601:web:edad57ae3ead90b8428758",
+  measurementId: "G-RF43L8F22K"
+};
+
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+      
+      // Esponiamo le funzioni al file script.js
+      window.fb = { db, ref, set, onValue };
+    </script>
+</head>
+<body>
+
+    <div class="app-container">
+        <div id="setupScreen" class="screen">
+            <header>
+                <h1>IYKYK <span>LIVE</span></h1>
+                <p>Inserisci un codice per unirti alla festa</p>
+            </header>
+            <div class="login-box">
+                <input type="text" id="roomInput" placeholder="Esempio: MARCO2026" maxlength="15">
+                <button onclick="joinRoom()" class="main-btn">ENTRA NELLA STANZA</button>
+            </div>
+            <div class="credits">Made by Marco and Gemini</div>
+        </div>
+
+        <div id="gameScreen" class="screen" style="display: none;">
+            <header>
+                <div class="status-bar">
+                    Stanza: <span id="roomDisplay">---</span>
+                </div>
+            </header>
+
+            <main class="quiz-section">
+                <div class="card domanda-card">
+                    <p id="domanda">In attesa del Master...</p>
+                    <span class="sub-label">CHI LEGGE SCEGLIE, GLI ALTRI INDOVINANO</span>
+                </div>
+
+                <div class="quiz-grid">
+                    <button class="card answer-card" onclick="selectLocal('A')">
+                        <span class="letter">A</span>
+                        <p id="ansA"></p>
+                    </button>
+                    <button class="card answer-card" onclick="selectLocal('B')">
+                        <span class="letter">B</span>
+                        <p id="ansB"></p>
+                    </button>
+                    <button class="card answer-card" onclick="selectLocal('C')">
+                        <span class="letter">C</span>
+                        <p id="ansC"></p>
+                    </button>
+                    <button class="card answer-card" onclick="selectLocal('D')">
+                        <span class="letter">D</span>
+                        <p id="ansD"></p>
+                    </button>
+                </div>
+            </main>
+
+            <footer>
+                <button id="nextBtn" class="main-btn neon-border">PROSSIMA DOMANDA (PER TUTTI)</button>
+                <div class="credits">Sincronizzato via Firebase</div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
