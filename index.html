@@ -7,28 +7,34 @@
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
     
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-      import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+   <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-      // --- SOSTITUISCI QUESTI DATI CON I TUOI ---
-      const firebaseConfig = {
-  apiKey: "AIzaSyDy4DGj_62KpcDCYOd-YgY8smFDsGysLic",
+  const firebaseConfig = {
+     apiKey: "AIzaSyDy4DGj_62KpcDCYOd-YgY8smFDsGysLic",
   authDomain: "iykyk-multi.firebaseapp.com",
   projectId: "iykyk-multi",
   storageBucket: "iykyk-multi.firebasestorage.app",
   messagingSenderId: "166511006601",
   appId: "1:166511006601:web:edad57ae3ead90b8428758",
-  measurementId: "G-RF43L8F22K"
-databaseURL: "https://iykyk-multi-default-rtdb.europe-west1.firebasedatabase.app",
-};
+  measurementId: "G-RF43L8F22K",
+    databaseURL: "https://iykyk-multi-default-rtdb.europe-west1.firebasedatabase.app",
+  };
 
-      const app = initializeApp(firebaseConfig);
-      const db = getDatabase(app);
-      
-      // Esponiamo le funzioni al file script.js
-      window.fb = { db, ref, set, onValue };
-    </script>
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+  
+  // Esportiamo tutto in un unico oggetto globale chiamato 'fb'
+  window.fb = {
+    db: db,
+    dbRef: ref,
+    dbSet: set,
+    dbOnValue: onValue
+  };
+
+  console.log("Firebase inizializzato correttamente!");
+</script>
 </head>
 <body>
 
