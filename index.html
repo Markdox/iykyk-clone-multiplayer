@@ -3,91 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>IYKYK Live Multiplayer</title>
+    <title>IYKYK Live Polls</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;900&display=swap" rel="stylesheet">
     
-   <script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+      import { getDatabase, ref, set, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-  const firebaseConfig = {
-     apiKey: "AIzaSyDy4DGj_62KpcDCYOd-YgY8smFDsGysLic",
-  authDomain: "iykyk-multi.firebaseapp.com",
-  projectId: "iykyk-multi",
-  storageBucket: "iykyk-multi.firebasestorage.app",
-  messagingSenderId: "166511006601",
-  appId: "1:166511006601:web:edad57ae3ead90b8428758",
-  measurementId: "G-RF43L8F22K",
-    databaseURL: "https://iykyk-multi-default-rtdb.europe-west1.firebasedatabase.app",
-  };
+      const firebaseConfig = {
+        apiKey: "IL_TUO_API_KEY",
+        authDomain: "IL_TUO_PROJECT.firebaseapp.com",
+        databaseURL: "https://IL_TUO_PROJECT-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "IL_TUO_PROJECT",
+        storageBucket: "IL_TUO_PROJECT.appspot.com",
+        messagingSenderId: "...",
+        appId: "..."
+      };
 
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
-  
-  // Esportiamo tutto in un unico oggetto globale chiamato 'fb'
-  window.fb = {
-    db: db,
-    dbRef: ref,
-    dbSet: set,
-    dbOnValue: onValue
-  };
-
-  console.log("Firebase inizializzato correttamente!");
-</script>
+      const app = initializeApp(firebaseConfig);
+      const db = getDatabase(app);
+      
+      window.fbProxy = {
+        db, ref, set, onValue, runTransaction,
+        isReady: true
+      };
+      console.log("Firebase Live Ready");
+    </script>
 </head>
 <body>
 
     <div class="app-container">
         <div id="setupScreen" class="screen">
-            <header>
-                <h1>IYKYK <span>LIVE</span></h1>
-                <p>Inserisci un codice per unirti alla festa</p>
-            </header>
+            <h1>IYKYK <span>POLLS</span></h1>
             <div class="login-box">
-                <input type="text" id="roomInput" placeholder="Esempio: MARCO2026" maxlength="15">
-                <button onclick="joinRoom()" class="main-btn">ENTRA NELLA STANZA</button>
+                <input type="text" id="roomInput" placeholder="CODICE STANZA" maxlength="15">
+                <button onclick="joinRoom()" class="main-btn neon-border">ENTRA NELLA STANZA</button>
             </div>
-            <div class="credits">Made by Marco and Gemini</div>
+            <p class="hint">Tutti i giocatori devono inserire lo stesso codice</p>
         </div>
 
         <div id="gameScreen" class="screen" style="display: none;">
-            <header>
-                <div class="status-bar">
-                    Stanza: <span id="roomDisplay">---</span>
-                </div>
-            </header>
+            <div class="status-bar">STANZA: <span id="roomDisplay">---</span></div>
+            
+            <div class="card domanda-card">
+                <p id="domanda">In attesa del Master...</p>
+                <span class="sub-label">VOTA SUL TUO TELEFONO</span>
+            </div>
 
-            <main class="quiz-section">
-                <div class="card domanda-card">
-                    <p id="domanda">In attesa del Master...</p>
-                    <span class="sub-label">CHI LEGGE SCEGLIE, GLI ALTRI INDOVINANO</span>
-                </div>
+            <div class="quiz-grid">
+                <button class="card answer-btn" onclick="submitVote('A')">
+                    <span class="letter">A</span>
+                    <p id="ansA"></p>
+                    <div class="vote-bar" id="barA"></div>
+                    <span class="vote-count" id="countA">0</span>
+                </button>
+                <button class="card answer-btn" onclick="submitVote('B')">
+                    <span class="letter">B</span>
+                    <p id="ansB"></p>
+                    <div class="vote-bar" id="barB"></div>
+                    <span class="vote-count" id="countB">0</span>
+                </button>
+                <button class="card answer-btn" onclick="submitVote('C')">
+                    <span class="letter">C</span>
+                    <p id="ansC"></p>
+                    <div class="vote-bar" id="barC"></div>
+                    <span class="vote-count" id="countC">0</span>
+                </button>
+                <button class="card answer-btn" onclick="submitVote('D')">
+                    <span class="letter">D</span>
+                    <p id="ansD"></p>
+                    <div class="vote-bar" id="barD"></div>
+                    <span class="vote-count" id="countD">0</span>
+                </button>
+            </div>
 
-                <div class="quiz-grid">
-                    <button class="card answer-card" onclick="selectLocal('A')">
-                        <span class="letter">A</span>
-                        <p id="ansA"></p>
-                    </button>
-                    <button class="card answer-card" onclick="selectLocal('B')">
-                        <span class="letter">B</span>
-                        <p id="ansB"></p>
-                    </button>
-                    <button class="card answer-card" onclick="selectLocal('C')">
-                        <span class="letter">C</span>
-                        <p id="ansC"></p>
-                    </button>
-                    <button class="card answer-card" onclick="selectLocal('D')">
-                        <span class="letter">D</span>
-                        <p id="ansD"></p>
-                    </button>
-                </div>
-            </main>
-
-            <footer>
-                <button id="nextBtn" class="main-btn neon-border">PROSSIMA DOMANDA (PER TUTTI)</button>
-                <div class="credits">Sincronizzato via Firebase</div>
-            </footer>
+            <button id="nextBtn" class="main-btn next-btn" onclick="nextQuestion()">PROSSIMA DOMANDA</button>
         </div>
     </div>
 
